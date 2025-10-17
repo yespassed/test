@@ -5,52 +5,122 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Yes Passed – Cat B Mock Theory Test</title>
 <style>
+:root{
+ --brand:#19b36b;--brand-dark:#128b53;--bg:#0b0f14;--card:#111823;
+ --text:#e8f1f0;--muted:#9fb3ad;--accent:#ffbf3f;--danger:#ff5d5d;
+}
+*{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b0f14;color:#e8f1f0;padding:20px}
-h1{color:#19b36b;text-align:center}
-.card{background:#111823;border-radius:12px;max-width:800px;margin:20px auto;padding:20px}
-button{background:#19b36b;color:#04140d;border:none;padding:10px 14px;margin:5px;border-radius:8px;font-weight:bold;cursor:pointer}
-button:hover{background:#128b53}
+h1{color:var(--brand);text-align:center}
+.card{background:var(--card);border-radius:14px;max-width:800px;margin:20px auto;padding:20px}
+button{background:var(--brand);color:#04140d;border:none;padding:10px 14px;margin:5px;border-radius:8px;font-weight:bold;cursor:pointer}
+button:hover{background:var(--brand-dark)}
 .progress{height:8px;background:#122031;border-radius:8px;margin:10px 0;overflow:hidden}
-.progress>div{height:100%;background:linear-gradient(90deg,#19b36b,#5bebaa);width:0%}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--brand),#5bebaa);width:0%}
 .answers{display:flex;flex-direction:column;gap:8px}
 .hidden{display:none}
+.timer{text-align:right;font-variant-numeric:tabular-nums;margin-bottom:8px}
 </style>
 </head>
 <body>
 <h1>Yes Passed – Cat B Mock Theory Test</h1>
 <div id="quiz" class="card">
-  <div id="qnum"></div>
-  <div class="progress"><div id="bar"></div></div>
-  <div id="qtext"></div>
-  <div id="answers" class="answers"></div>
-  <div><button id="prev">← Prev</button><button id="next">Next →</button><button id="finish">Submit</button></div>
+ <div class="timer" id="timer">57:00</div>
+ <div id="qnum"></div>
+ <div class="progress"><div id="bar"></div></div>
+ <div id="qtext"></div>
+ <div id="answers" class="answers"></div>
+ <div>
+   <button id="prev">← Prev</button>
+   <button id="next">Next →</button>
+   <button id="finish">Submit</button>
+ </div>
 </div>
 <div id="result" class="card hidden"></div>
 
 <script>
+const TOTAL=50,PASS=43,DUR=57*60;
 const questions=[
  {q:"What does a red circular road sign mean?",a:["Information","Warning","You must do / must not"],c:2},
- {q:"Triangle with a deer symbol means…",a:["Farm traffic","Wild animals likely to cross","Zoo ahead"],c:1},
+ {q:"Triangle with deer symbol means…",a:["Farm animals","Wild animals crossing","Zoo ahead"],c:1},
  {q:"Blue circle with 30 means…",a:["Minimum 30 mph","Maximum 30 mph","Advisory 30 mph"],c:0},
- {q:"What does a rectangular brown sign show?",a:["Tourist info/attraction","Bus lane","Diversion"],c:0}
+ {q:"Brown rectangular signs show…",a:["Tourist information","Diversion","Bus lane"],c:0},
+ {q:"Car over wavy lines symbol means…",a:["Slippery road","Loose chippings","Flood risk"],c:0},
+ {q:"Red circle with motorbike above car means…",a:["No motor vehicles","Buses only","Cycles only"],c:0},
+ {q:"Blue sign ‘Keep Left’ means…",a:["Pass either side","Turn left","Keep left"],c:2},
+ {q:"Triangle with horse symbol means…",a:["Horses on road","Stables ahead","Riders only"],c:0},
+ {q:"Chevron board (arrows on bend) means…",a:["Sharp deviation of route","Priority road","Dual carriageway begins"],c:0},
+ {q:"Black stripe on white circle means…",a:["End of limit","National speed limit applies","No waiting"],c:1},
+ {q:"Sign with red bar and white background means…",a:["No entry","Stop","Give way"],c:0},
+ {q:"Triangle with ‘!’ means…",a:["General danger","Priority road","Give way"],c:0},
+ {q:"Blue rectangle with ‘P’ means…",a:["Parking","Pedestrian","Police"],c:0},
+ {q:"Triangle with rocks falling means…",a:["Loose chippings","Falling rocks","Uneven road"],c:1},
+ {q:"Triangle with bicycle means…",a:["Cycle lane begins","Cyclists ahead","Cycle prohibited"],c:1},
+ {q:"Height restriction 3.9 m means…",a:["Avoid if taller","Steep bridge","Weighbridge"],c:0},
+ {q:"Yellow signs usually mean…",a:["Diversion / temporary","Tourist","Bus only"],c:0},
+ {q:"Zigzag lines at crossings mean…",a:["No stopping or parking","Bus stop","Advisory only"],c:0},
+ {q:"Windsock symbol means…",a:["Crosswinds likely","Airfield ahead","Tunnel ahead"],c:0},
+ {q:"Level crossing without barrier symbol means…",a:["Be ready to stop","Tramway","Overhead cables"],c:0},
+ {q:"Red circle with number 20 means…",a:["Maximum 20 mph","Minimum 20 mph","Average 20"],c:0},
+ {q:"Blue sign with pedestrian and bike divided by line means…",a:["Shared path","Cycles only","Pedestrian only"],c:0},
+ {q:"Triangle with train symbol means…",a:["Level crossing ahead","Station","Tram ahead"],c:0},
+ {q:"Yellow box junction means…",a:["Do not enter unless exit is clear","Give way to right","Stop line for buses"],c:0},
+ {q:"Triangle with hump means…",a:["Humpback bridge","Flood","Tunnel"],c:0},
+ {q:"Blue sign with white arrow left means…",a:["Turn left","Keep left","No left turn"],c:0},
+ {q:"‘No through road’ sign means…",a:["Dead end","Diversion","One-way"],c:0},
+ {q:"Camera symbol means…",a:["Speed cameras","Tourist spot","Motorway services"],c:0},
+ {q:"Bus and cycle symbol on blue lane means…",a:["Bus and cycle lane","Bus stop","Cycle prohibited"],c:0},
+ {q:"Triangle with queues symbol means…",a:["Congestion likely","Parking ahead","Dual carriageway ends"],c:0},
+ {q:"Red circle with lorry means…",a:["Goods vehicles prohibited","Weight limit only","Warning for HGVs"],c:0},
+ {q:"Triangle with windy arrow means…",a:["Double bend","Crosswinds","Sharp corner"],c:1},
+ {q:"Triangle with traffic lights means…",a:["Signals ahead","Signals not working","Camera zone"],c:0},
+ {q:"‘End of average speed check’ means…",a:["End of enforcement","End of limit","End of motorway"],c:0},
+ {q:"Triangle with car and motorbike means…",a:["Two-way traffic crosses dual carriageway","Road narrows","Bridge ahead"],c:0},
+ {q:"Triangle with T-junction symbol means…",a:["T-junction ahead","No through road","End of dual carriageway"],c:0},
+ {q:"‘No waiting’ sign (blue circle red slash) means…",a:["No waiting","No stopping","No entry"],c:0},
+ {q:"Blue rectangular sign with arrows both ways means…",a:["Two-way traffic crosses a one-way road","Give way to right","Priority road"],c:0},
+ {q:"Tram symbol in red triangle means…",a:["Trams operate in road","Tram station","Buses only"],c:0},
+ {q:"White diagonal arrows painted on road mean…",a:["Move left if safe","Overtake","Accelerate"],c:0},
+ {q:"Triangle with rocks falling downhill means…",a:["Falling rocks","Loose chippings","Steep hill"],c:0},
+ {q:"Plate ‘Except for access’ means…",a:["Vehicles may enter only to reach premises","Residents only","No vehicles at all"],c:0},
+ {q:"Blue rectangle with motorway symbol means…",a:["Motorway ahead","End of motorway","Motorway services"],c:0},
+ {q:"Red circle with horn and slash means…",a:["No horn","Sound horn","Quiet zone ends"],c:0},
+ {q:"Triangle with cow symbol means…",a:["Farm animals on road","Wild deer","Zoo ahead"],c:0},
+ {q:"Triangle with car and skid marks means…",a:["Slippery road","Steep hill","Loose surface"],c:0},
+ {q:"Blue sign with white arrow down left means…",a:["Keep left","Turn left","Give way left"],c:0},
+ {q:"Triangle with barrier and train means…",a:["Level crossing with barrier","Railway station","Tram stop"],c:0},
+ {q:"Blue sign with pedestrian symbol means…",a:["Pedestrian zone","Crossing ahead","School ahead"],c:0},
+ {q:"Triangle with children symbol means…",a:["School crossing ahead","Play street","Pedestrian zone"],c:0},
+ {q:"Triangle with road merging symbol means…",a:["Road narrows","Lane merge","Slip road ahead"],c:1}
 ];
-let i=0,score=0,answers=Array(questions.length).fill(null);
-const qn=document.getElementById('qnum'),qt=document.getElementById('qtext'),qa=document.getElementById('answers'),bar=document.getElementById('bar');
+while(questions.length<TOTAL)questions.push(...questions.slice(0,TOTAL-questions.length));
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+const order=shuffle([...Array(TOTAL).keys()]);
+let i=0,answers=Array(TOTAL).fill(null),score=0,time=DUR,finished=false;
+const qn=document.getElementById('qnum'),qt=document.getElementById('qtext'),
+qa=document.getElementById('answers'),bar=document.getElementById('bar'),
+timer=document.getElementById('timer'),quiz=document.getElementById('quiz'),res=document.getElementById('result');
+function fmt(s){const m=Math.floor(s/60),x=s%60;return`${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`;}
 function show(k){
- const q=questions[k];qn.textContent=Question ${k+1} of ${questions.length};qt.textContent=q.q;qa.innerHTML='';
- q.a.forEach((txt,j)=>{const b=document.createElement('button');b.textContent=txt;b.onclick=()=>{answers[k]=j;bar.style.width=(answers.filter(x=>x!==null).length/questions.length*100)+'%';};qa.appendChild(b);});
+ const q=questions[order[k]];qn.textContent=`Question ${k+1} of ${TOTAL}`;qt.textContent=q.q;qa.innerHTML='';
+ const opts=shuffle(q.a.map((t,j)=>({t,j})));
+ opts.forEach(o=>{const b=document.createElement('button');b.textContent=o.t;b.onclick=()=>{answers[k]=o.j;bar.style.width=(answers.filter(x=>x!==null).length/TOTAL*100)+'%';};qa.append(b);});
 }
+function calc(){score=answers.reduce((s,v,n)=>s+(v===questions[order[n]].c?1:0),0);return score;}
 function finish(){
- score=answers.reduce((s,v,n)=>s+(v===questions[n].c?1:0),0);
- document.getElementById('quiz').classList.add('hidden');
- const r=document.getElementById('result');
- r.classList.remove('hidden');
- r.innerHTML=`<h2>Result</h2><p>You scored <strong>${score}</strong> / ${questions.length}</p><p>${score>=3?'✅ PASS':'❌ Try again'}</p>
+ if(finished)return;finished=true;
+ const s=calc(),pass=s>=PASS;
+ quiz.classList.add('hidden');res.classList.remove('hidden');
+ res.innerHTML=`<h2>Result</h2>
+ <p>You scored <strong>${s}</strong> of ${TOTAL}</p>
+ <p>${pass?'✅ PASS':'❌ FAIL'}</p>
+ <p>Time taken: ${fmt(DUR-time)}</p>
  <p><a href='https://www.facebook.com/yespassed' style='color:#19b36b;'>Share your result</a></p>`;
 }
-document.getElementById('next').onclick=()=>{if(i<questions.length-1)i++;show(i);};
+document.getElementById('next').onclick=()=>{if(i<TOTAL-1)i++;show(i);};
 document.getElementById('prev').onclick=()=>{if(i>0)i--;show(i);};
 document.getElementById('finish').onclick=finish;
+setInterval(()=>{if(finished)return;time--;timer.textContent=fmt(time);if(time<=0)finish();},1000);
 show(0);
 </script>
 </body>
