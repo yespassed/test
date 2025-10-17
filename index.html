@@ -1,127 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Yes Passed – Cat B Mock Theory Test</title>
 <style>
-:root{
- --brand:#19b36b;--brand-dark:#128b53;--bg:#0b0f14;--card:#111823;
- --text:#e8f1f0;--muted:#9fb3ad;--accent:#ffbf3f;--danger:#ff5d5d;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b0f14;color:#e8f1f0;padding:20px}
-h1{color:var(--brand);text-align:center}
-.card{background:var(--card);border-radius:14px;max-width:800px;margin:20px auto;padding:20px}
-button{background:var(--brand);color:#04140d;border:none;padding:10px 14px;margin:5px;border-radius:8px;font-weight:bold;cursor:pointer}
-button:hover{background:var(--brand-dark)}
-.progress{height:8px;background:#122031;border-radius:8px;margin:10px 0;overflow:hidden}
-.progress>div{height:100%;background:linear-gradient(90deg,var(--brand),#5bebaa);width:0%}
-.answers{display:flex;flex-direction:column;gap:8px}
-.hidden{display:none}
-.timer{text-align:right;font-variant-numeric:tabular-nums;margin-bottom:8px}
+  :root{
+    --brand:#19b36b; --brand-dark:#128b53; --bg:#0b0f14; --card:#111823;
+    --text:#e8f1f0; --muted:#9fb3ad; --accent:#ffbf3f; --danger:#ff5d5d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0f14,#0e141d 60%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif}
+  header{position:sticky;top:0;z-index:10;background:rgba(17,24,35,.9);backdrop-filter:blur(8px);border-bottom:1px solid #1e2a3b}
+  .wrap{max-width:980px;margin:0 auto;padding:16px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:36px;height:36px;border-radius:8px;background:var(--brand);display:grid;place-items:center;color:#04140d;font-weight:800}
+  h1{margin:0;font-size:clamp(1.2rem,2.4vw,1.6rem)}
+  .meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;color:var(--muted);font-size:.92rem}
+  main{padding:16px}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:980px){.grid{grid-template-columns:1fr 300px}}
+  .card{background:var(--card);border:1px solid #1e2a3b;border-radius:16px;padding:16px}
+  .qhead{display:flex;justify-content:space-between;align-items:end;gap:12px}
+  .timer{font-variant-numeric:tabular-nums}
+  .progress{height:10px;background:#122031;border-radius:999px;overflow:hidden;border:1px solid #1e2a3b}
+  .progress>div{height:100%;background:linear-gradient(90deg,var(--brand),#5bebaa);width:0%}
+  .qimg{display:block;max-width:160px;max-height:160px;object-fit:contain;background:#0c1320;border:1px solid #223248;border-radius:12px;padding:8px;margin:8px 0}
+  .qtext{font-size:1.05rem;font-weight:600;margin:8px 0}
+  .answers{display:grid;gap:10px;margin-top:8px}
+  .answer{display:flex;align-items:center;gap:10px;border:1px solid #223248;background:#0f1622;border-radius:12px;padding:10px;cursor:pointer;transition:transform .05s}
+  .answer input{accent-color:var(--brand)}
+  .answer:active{transform:scale(.995)}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .btn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .ghost{background:transparent;border:1px solid #2a3a52;color:var(--text)}
+  .primary{background:var(--brand);color:#04140d}
+  .primary:hover{background:var(--brand-dark)}
+  .review{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:8px}
+  .review button{padding:8px;border-radius:10px;border:1px solid #27384f;background:#0e1724;color:var(--text);font-variant-numeric:tabular-nums}
+  .review button.answered{background:#122b1f;border-color:#1e5a3b}
+  .hidden{display:none}
+  /* Results & share */
+  #results .shareCard{background:var(--brand);color:#04140d;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .shareHeader{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .shareLogo{width:36px;height:36px;border-radius:10px;background:#04140d;color:var(--brand);display:grid;place-items:center;font-weight:800}
+  .shareRow{display:flex;gap:10px;flex-wrap:wrap}
+  .pill{padding:6px 10px;border-radius:999px;background:#0c271b;color:#b7f0d2;border:1px solid #0e3a25}
+  .shareBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  details{margin-top:14px}
+  summary{cursor:pointer}
+  .inc-list li{margin-bottom:10px}
+  .inc-q{font-weight:700}
+  .inc-correct{color:#9cf0c6}
+  .inc-expl{color:#bfe7d6}
+  footer{color:var(--muted);text-align:center;margin:30px 0}
 </style>
 </head>
 <body>
-<h1>Yes Passed – Cat B Mock Theory Test</h1>
-<div id="quiz" class="card">
- <div class="timer" id="timer">57:00</div>
- <div id="qnum"></div>
- <div class="progress"><div id="bar"></div></div>
- <div id="qtext"></div>
- <div id="answers" class="answers"></div>
- <div>
-   <button id="prev">← Prev</button>
-   <button id="next">Next →</button>
-   <button id="finish">Submit</button>
- </div>
-</div>
-<div id="result" class="card hidden"></div>
+<header>
+  <div class="wrap brand">
+    <div class="logo">YP</div>
+    <div>
+      <h1>Yes Passed – Cat B Mock Theory Test</h1>
+      <div class="meta"><span>50 Questions</span><span>57:00 limit</span><span>Pass: 43</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap grid" id="app">
+  <section class="card">
+    <div class="qhead">
+      <div>Question <span id="qNo">1</span> / 50</div>
+      <div class="timer" id="timer">57:00</div>
+    </div>
+    <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+    <img id="qImg" class="qimg hidden" alt="Road sign" />
+    <div class="qtext" id="qText">Loading…</div>
+    <div class="answers" id="answers"></div>
+    <div class="controls">
+      <button class="btn ghost" id="prevBtn">← Prev</button>
+      <button class="btn ghost" id="nextBtn">Next →</button>
+      <button class="btn primary" id="submitBtn">Submit</button>
+    </div>
+  </section>
+
+  <aside class="card">
+    <h3 style="margin-top:0">Review</h3>
+    <p class="muted" style="margin-top:-6px;color:var(--muted)">Jump to any question.</p>
+    <div class="review" id="review"></div>
+  </aside>
+</main>
+
+<section class="wrap card hidden" id="results">
+  <h2 style="margin-top:0">Results</h2>
+  <p id="summary"></p>
+
+  <div id="shareCard" class="shareCard">
+    <div class="shareHeader">
+      <div class="shareLogo">YP</div>
+      <div style="font-weight:800">Yes Passed – Cat B Mock Theory Test</div>
+    </div>
+    <div class="shareRow">
+      <span class="pill" id="shareDate"></span>
+      <span class="pill" id="shareTimeTaken"></span>
+      <span class="pill" id="shareScore"></span>
+      <span class="pill" id="shareOutcome"></span>
+    </div>
+    <p style="margin:10px 0 0"><strong>Yes Passed Driving Academy</strong><br><em>Built for Growth. Driven by Learning.</em></p>
+    <div class="shareBtns">
+      <button id="fbShare" class="btn ghost">Share on Facebook</button>
+      <button id="copyShare" class="btn ghost">Copy Result</button>
+      <button id="saveImg" class="btn ghost">Save as Image</button>
+    </div>
+  </div>
+
+  <details open>
+    <summary><strong>Review your incorrect questions</strong></summary>
+    <ol id="incorrectList" class="inc-list"></ol>
+  </details>
+
+  <div class="controls" style="margin-top:12px">
+    <button id="restart" class="btn primary">Restart Test</button>
+  </div>
+</section>
+
+<footer>
+  💚 <strong>Yes Passed Driving Academy</strong> — Built for Growth. Driven by Learning.
+</footer>
+
+<!-- html2canvas for share card image -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
 
 <script>
-const TOTAL=50,PASS=43,DUR=57*60;
-const questions=[
- {q:"What does a red circular road sign mean?",a:["Information","Warning","You must do / must not"],c:2},
- {q:"Triangle with deer symbol means…",a:["Farm animals","Wild animals crossing","Zoo ahead"],c:1},
- {q:"Blue circle with 30 means…",a:["Minimum 30 mph","Maximum 30 mph","Advisory 30 mph"],c:0},
- {q:"Brown rectangular signs show…",a:["Tourist information","Diversion","Bus lane"],c:0},
- {q:"Car over wavy lines symbol means…",a:["Slippery road","Loose chippings","Flood risk"],c:0},
- {q:"Red circle with motorbike above car means…",a:["No motor vehicles","Buses only","Cycles only"],c:0},
- {q:"Blue sign ‘Keep Left’ means…",a:["Pass either side","Turn left","Keep left"],c:2},
- {q:"Triangle with horse symbol means…",a:["Horses on road","Stables ahead","Riders only"],c:0},
- {q:"Chevron board (arrows on bend) means…",a:["Sharp deviation of route","Priority road","Dual carriageway begins"],c:0},
- {q:"Black stripe on white circle means…",a:["End of limit","National speed limit applies","No waiting"],c:1},
- {q:"Sign with red bar and white background means…",a:["No entry","Stop","Give way"],c:0},
- {q:"Triangle with ‘!’ means…",a:["General danger","Priority road","Give way"],c:0},
- {q:"Blue rectangle with ‘P’ means…",a:["Parking","Pedestrian","Police"],c:0},
- {q:"Triangle with rocks falling means…",a:["Loose chippings","Falling rocks","Uneven road"],c:1},
- {q:"Triangle with bicycle means…",a:["Cycle lane begins","Cyclists ahead","Cycle prohibited"],c:1},
- {q:"Height restriction 3.9 m means…",a:["Avoid if taller","Steep bridge","Weighbridge"],c:0},
- {q:"Yellow signs usually mean…",a:["Diversion / temporary","Tourist","Bus only"],c:0},
- {q:"Zigzag lines at crossings mean…",a:["No stopping or parking","Bus stop","Advisory only"],c:0},
- {q:"Windsock symbol means…",a:["Crosswinds likely","Airfield ahead","Tunnel ahead"],c:0},
- {q:"Level crossing without barrier symbol means…",a:["Be ready to stop","Tramway","Overhead cables"],c:0},
- {q:"Red circle with number 20 means…",a:["Maximum 20 mph","Minimum 20 mph","Average 20"],c:0},
- {q:"Blue sign with pedestrian and bike divided by line means…",a:["Shared path","Cycles only","Pedestrian only"],c:0},
- {q:"Triangle with train symbol means…",a:["Level crossing ahead","Station","Tram ahead"],c:0},
- {q:"Yellow box junction means…",a:["Do not enter unless exit is clear","Give way to right","Stop line for buses"],c:0},
- {q:"Triangle with hump means…",a:["Humpback bridge","Flood","Tunnel"],c:0},
- {q:"Blue sign with white arrow left means…",a:["Turn left","Keep left","No left turn"],c:0},
- {q:"‘No through road’ sign means…",a:["Dead end","Diversion","One-way"],c:0},
- {q:"Camera symbol means…",a:["Speed cameras","Tourist spot","Motorway services"],c:0},
- {q:"Bus and cycle symbol on blue lane means…",a:["Bus and cycle lane","Bus stop","Cycle prohibited"],c:0},
- {q:"Triangle with queues symbol means…",a:["Congestion likely","Parking ahead","Dual carriageway ends"],c:0},
- {q:"Red circle with lorry means…",a:["Goods vehicles prohibited","Weight limit only","Warning for HGVs"],c:0},
- {q:"Triangle with windy arrow means…",a:["Double bend","Crosswinds","Sharp corner"],c:1},
- {q:"Triangle with traffic lights means…",a:["Signals ahead","Signals not working","Camera zone"],c:0},
- {q:"‘End of average speed check’ means…",a:["End of enforcement","End of limit","End of motorway"],c:0},
- {q:"Triangle with car and motorbike means…",a:["Two-way traffic crosses dual carriageway","Road narrows","Bridge ahead"],c:0},
- {q:"Triangle with T-junction symbol means…",a:["T-junction ahead","No through road","End of dual carriageway"],c:0},
- {q:"‘No waiting’ sign (blue circle red slash) means…",a:["No waiting","No stopping","No entry"],c:0},
- {q:"Blue rectangular sign with arrows both ways means…",a:["Two-way traffic crosses a one-way road","Give way to right","Priority road"],c:0},
- {q:"Tram symbol in red triangle means…",a:["Trams operate in road","Tram station","Buses only"],c:0},
- {q:"White diagonal arrows painted on road mean…",a:["Move left if safe","Overtake","Accelerate"],c:0},
- {q:"Triangle with rocks falling downhill means…",a:["Falling rocks","Loose chippings","Steep hill"],c:0},
- {q:"Plate ‘Except for access’ means…",a:["Vehicles may enter only to reach premises","Residents only","No vehicles at all"],c:0},
- {q:"Blue rectangle with motorway symbol means…",a:["Motorway ahead","End of motorway","Motorway services"],c:0},
- {q:"Red circle with horn and slash means…",a:["No horn","Sound horn","Quiet zone ends"],c:0},
- {q:"Triangle with cow symbol means…",a:["Farm animals on road","Wild deer","Zoo ahead"],c:0},
- {q:"Triangle with car and skid marks means…",a:["Slippery road","Steep hill","Loose surface"],c:0},
- {q:"Blue sign with white arrow down left means…",a:["Keep left","Turn left","Give way left"],c:0},
- {q:"Triangle with barrier and train means…",a:["Level crossing with barrier","Railway station","Tram stop"],c:0},
- {q:"Blue sign with pedestrian symbol means…",a:["Pedestrian zone","Crossing ahead","School ahead"],c:0},
- {q:"Triangle with children symbol means…",a:["School crossing ahead","Play street","Pedestrian zone"],c:0},
- {q:"Triangle with road merging symbol means…",a:["Road narrows","Lane merge","Slip road ahead"],c:1}
+// ===== Config =====
+const TOTAL = 50;
+const PASS = 43;
+const DURATION_SECONDS = 57*60; // 57 minutes
+const SHARE_URL = "https://www.facebook.com/yespassed";
+
+// ===== Questions (mixed topics). img = Wikimedia UK sign (open licence). =====
+const QUESTIONS = [
+  // Signs with images
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/UK_traffic_sign_616.svg/120px-UK_traffic_sign_616.svg.png", a:["No entry","No stopping","Stop","Give way"], c:0, e:"A red circle with a white horizontal bar means ‘No entry’ to all vehicles."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/UK_traffic_sign_602.svg/120px-UK_traffic_sign_602.svg.png", a:["Give way","Stop","No vehicles","No entry"], c:0, e:"An inverted triangle with red border is ‘Give Way’. Yield to traffic on the major road."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/UK_traffic_sign_512.svg/120px-UK_traffic_sign_512.svg.png", a:["Road narrows both sides","End of dual carriageway","Uneven road","Road closed"], c:0, e:"The symbol shows both edges converging — ‘Road narrows on both sides’."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/UK_traffic_sign_554.2.svg/120px-UK_traffic_sign_554.2.svg.png", a:["Slippery road","Loose chippings","Steep hill","Ford"], c:0, e:"The car with skid marks warns of a slippery road surface, especially when wet/icy."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/UK_traffic_sign_610.svg/120px-UK_traffic_sign_610.svg.png", a:["National speed limit applies","End of 30 mph","No waiting","No stopping"], c:0, e:"The diagonal black stripe on white indicates the national speed limit applies."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/UK_traffic_sign_679.svg/120px-UK_traffic_sign_679.svg.png", a:["Falling or fallen rocks","Loose chippings","Quarry entrance","Steep hill"], c:0, e:"The rock symbol warns of falling or fallen rocks. Slow down; be ready to stop."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/UK_traffic_sign_552.svg/120px-UK_traffic_sign_552.svg.png", a:["Wild animals crossing","Cattle crossing","Farm traffic only","Zoo ahead"], c:0, e:"Deer symbol warns that wild animals may cross."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/UK_traffic_sign_601.1.svg/120px-UK_traffic_sign_601.1.svg.png", a:["No motor vehicles","No buses","Cars and bikes only","Bus & cycle lane"], c:0, e:"Motorcycle above car in a red circle = ‘No motor vehicles’."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/UK_traffic_sign_567.svg/120px-UK_traffic_sign_567.svg.png", a:["Humpback bridge or road hump","Bridge ahead","Tunnel","Ford"], c:0, e:"The hump symbol warns of a humpback bridge or road hump — slow down."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/UK_traffic_sign_510.svg/120px-UK_traffic_sign_510.svg.png", a:["No through road (cul-de-sac)","One-way only","T-junction","Diversion"], c:0, e:"Blue ‘T’ rectangle indicates a no-through road for vehicles."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/UK_traffic_sign_611.svg/120px-UK_traffic_sign_611.svg.png", a:["No waiting","No stopping","Clearway ends","One way"], c:0, e:"Blue circle with single red slash = ‘No waiting’. (Two slashes = ‘No stopping’)."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/UK_traffic_sign_606.svg/120px-UK_traffic_sign_606.svg.png", a:["Turn left (mandatory)","No left turn","Keep left","Give way to left"], c:0, e:"Blue circular arrow signs are mandatory directions, e.g. ‘Turn left’."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/UK_traffic_sign_816.svg/140px-UK_traffic_sign_816.svg.png", a:["Traffic enforcement cameras","Tourist attraction","Average speed ends","Bus lane camera only"], c:0, e:"Camera symbol indicates traffic enforcement cameras may operate."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/UK_traffic_sign_545.svg/120px-UK_traffic_sign_545.svg.png", a:["Road works ahead","Workers crossing","End of works","Maintenance lay-by"], c:0, e:"Man with shovel = ‘Road works ahead’. Expect changes and slow down."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/UK_traffic_sign_642.svg/100px-UK_traffic_sign_642.svg.png", a:["No overtaking","Contraflow","Overtaking lane ahead","Priority over oncoming"], c:0, e:"Red circle with two cars (black passing red) = ‘No overtaking’."},
+  // Non-image & general rules/behaviour
+  {q:"At a zebra crossing with zigzag lines, what must you do?", a:["Stop to load briefly","Avoid overtaking or parking","Sound your horn","Use hazard lights"], c:1, e:"Zigzags mean no stopping, parking or overtaking — keeps sight lines clear."},
+  {q:"A green filter arrow shows at traffic lights. You should:", a:["Proceed in that direction if the junction is clear","Proceed regardless","Stop and wait","Give way to vehicles on your left only"], c:0, e:"A green filter arrow allows you to go in that direction if the way is clear."},
+  {q:"You see ‘Except for access’ below a restriction. It means:", a:["Residents only","Vehicles may enter only to reach premises/land inside","Loading only","Buses only"], c:1, e:"You can pass the restriction solely to access premises within — not as a through-route."},
+  {q:"On a motorway, a red X over your lane means:", a:["Reduce speed","Lane closed – do not use","Hard shoulder only","Queue ahead"], c:1, e:"A red X means the lane is closed. Leave it safely and promptly."},
+  {q:"Approaching a pelican crossing with flashing amber, you should:", a:["Stop and wait for green","Proceed if the crossing is clear","Sound your horn","Speed up to clear"], c:1, e:"Flashing amber allows you to go if the crossing is clear; give way to pedestrians still crossing."},
+  {q:"When following a large vehicle in rain, increase your:", a:["Speed","Following distance","Horn use","Headlight beam"], c:1, e:"Spray reduces visibility; increase separation to maintain a safe stopping distance."},
+  {q:"You’re turning right at a crossroads with oncoming traffic and no markings. You should:", a:["Turn in front of the oncoming vehicle","Keep to your left and turn behind the oncoming vehicle","Force your priority","Sound your horn"], c:1, e:"Turn offside-to-offside (behind each other) unless road layout/markings indicate otherwise."},
+  {q:"On a dual carriageway with a central reservation, the national speed limit for cars is:", a:["70 mph","60 mph","50 mph","40 mph"], c:0, e:"For cars, NSL is 70 mph on motorways and dual carriageways (unless signed otherwise)."},
+  {q:"A ball rolls into the road from between parked cars. You should:", a:["Continue at same speed","Expect a child to follow and be ready to stop","Sound the horn and maintain speed","Swerve into the opposite lane"], c:1, e:"Expect a child to follow a ball. Slow immediately and be prepared to stop."},
+  {q:"You’re dazzled by oncoming headlights at night. Do you:", a:["Look to the kerb and slow if needed","Look directly at the lights","Switch to main beam","Accelerate past"], c:0, e:"Avoid glare by glancing towards the left kerb and reduce speed if necessary."},
+  {q:"You’re at the front of a queue at a red light. A siren approaches behind. You should:", a:["Go through the red light","Pull into the junction and stop","Stay put; don’t break the law","U-turn immediately"], c:2, e:"Don’t break a red light. If safe and legal, move aside when the light changes."},
+  {q:"When would you use headlights in daytime?", a:["In fog or seriously reduced visibility","Always","Never","Only on rural roads"], c:0, e:"Use dipped headlights in fog or when visibility is seriously reduced."},
+  {q:"You’re on a smart motorway; the speed drops to a lower limit. You should:", a:["Ignore it","Obey the displayed limit","Stop on the hard shoulder","Only slow if traffic is heavy"], c:1, e:"Mandatory variable limits must be obeyed; they manage flow and safety."},
+  {q:"Approaching a roundabout in the left lane but going right (3rd exit). You should:", a:["Stay left always","Move right when safe and signal right","Stop and wait for an escort","Sound horn to warn others"], c:1, e:"Position in the correct lane in good time and signal appropriately."},
+  {q:"On wet roads, typical stopping distances can be:", a:["Half normal","Same as dry","Double","One quarter"], c:2, e:"Allow at least double the stopping distance in wet conditions."},
+  {q:"A ‘box junction’ means you must not enter unless:", a:["You’re turning left","Your exit is clear","It’s rush hour","You’re following emergency services"], c:1, e:"Only enter when your exit is clear, except if turning right and blocked by oncoming traffic."},
+  {q:"At an unmarked junction, who has priority?", a:["Traffic on the right","You do","No one — proceed with caution","The largest vehicle"], c:2, e:"No marked priority — all traffic should proceed with caution and be prepared to stop."},
+  {q:"You’re towing a trailer on a motorway. The max speed limit is:", a:["70 mph","60 mph","50 mph","40 mph"], c:1, e:"Cars towing trailers are limited to 60 mph on motorways and dual carriageways (unless lower limit applies)."},
+  {q:"Parking on the road at night, you should:", a:["Leave full beam on","Park facing traffic","Use parking lights where speed limit exceeds 30 mph","No lights needed"], c:2, e:"Where the speed limit is over 30 mph, use sidelights when parked on a road at night."},
+  {q:"Where would you expect ‘red studs’ on a motorway?", a:["Between lanes","Between hard shoulder and carriageway edge","Between carriageways","At slip roads"], c:1, e:"Red reflective studs mark the left edge between the hard shoulder and the carriageway."},
+  {q:"What’s the safest way to use a sat nav while driving?", a:["Set it before you move and follow safely","Program while moving","Hold it in your hand","Ignore the route"], c:0, e:"Set guidance before moving and follow without distraction; stop safely if adjustments are needed."},
+  // More sign/image questions
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/UK_traffic_sign_520.svg/120px-UK_traffic_sign_520.svg.png", a:["Traffic signals ahead","Level crossing ahead","Speed camera ahead","Tunnel"], c:0, e:"Red triangle with signal heads warns ‘Traffic signals ahead’."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/UK_traffic_sign_618.2.svg/120px-UK_traffic_sign_618.2.svg.png", a:["Minimum speed 30","Maximum speed 30","Advisory 30","National speed limit"], c:0, e:"Blue circular with number = minimum speed."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/UK_traffic_sign_547.2.svg/120px-UK_traffic_sign_547.2.svg.png", a:["Two-way traffic crosses a one-way road","Priority over oncoming traffic","Give way to oncoming traffic","Contraflow ahead"], c:0, e:"White arrows opposite directions indicate two-way traffic crossing a one-way road."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/UK_traffic_sign_629.2.svg/120px-UK_traffic_sign_629.2.svg.png", a:["Bus lane","Cycle lane (with times)","Cycle route only","Cycles prohibited"], c:1, e:"Blue rectangular plates often indicate bus/cycle lanes with time plates for operation."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/UK_traffic_sign_810.svg/120px-UK_traffic_sign_810.svg.png", a:["Motorway ahead","End of motorway","Services ahead only","Motorway closed"], c:0, e:"Motorway symbol (stacked bridge) indicates the start of motorway regulations."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/UK_traffic_sign_640.1.svg/120px-UK_traffic_sign_640.1.svg.png", a:["No stopping (clearway)","No waiting","No parking 8–6","End of clearway"], c:0, e:"Blue circle/red cross = clearway: no stopping at any time (unless signed otherwise)."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/UK_traffic_sign_557.svg/120px-UK_traffic_sign_557.svg.png", a:["Level crossing without barrier","Level crossing with barrier","Tram stop","Railway station"], c:1, e:"Barrier symbol indicates a level crossing with barrier or gate."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/UK_traffic_sign_547.svg/120px-UK_traffic_sign_547.svg.png", a:["Two-way traffic","Dual carriageway ahead","Contraflow starts","One-way street"], c:0, e:"Vertical arrows opposite directions: two-way traffic."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/UK_traffic_sign_528.svg/120px-UK_traffic_sign_528.svg.png", a:["Steep hill downwards","Steep hill upwards","Low gear now","Adverse camber"], c:0, e:"Triangle with descending gradient (e.g. 10%) warns steep hill downwards."},
+  {q:"What does this sign mean?", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/UK_traffic_sign_547.4.svg/120px-UK_traffic_sign_547.4.svg.png", a:["Priority over oncoming traffic","Give way to oncoming traffic","Two-way road","No entry"], c:0, e:"White arrow up with red smaller arrow down = you have priority over oncoming traffic."},
+  // Final mixed general
+  {q:"When should you use your horn?", a:["To greet a friend","To warn others of your presence when necessary","In built-up areas at night routinely","When stationary for attention"], c:1, e:"Use the horn only to warn of danger — not to show annoyance or at night in restricted hours."},
+  {q:"If visibility is less than 100 metres in fog, you should:", a:["Use fog lights and main beam","Use headlights and rear fog lights if needed","No lights needed","Use hazard lights while driving"], c:1, e:"Use dipped headlights; rear fogs if visibility is below 100m. Turn them off when visibility improves."},
+  {q:"You’re overtaking a cyclist in windy conditions. You should:", a:["Pass closely to shelter them","Give them at least 1.5 m clearance (more at higher speeds)","Sound your horn to warn","Only overtake on bends"], c:1, e:"Give cyclists plenty of room — Highway Code recommends at least 1.5 m at lower speeds."},
+  {q:"You approach a green signal but the junction is blocked. You should:", a:["Enter and wait","Stop and wait until your exit is clear","Sound horn and proceed","Use the opposite lane"], c:1, e:"Don’t enter a junction unless your exit is clear — avoid causing obstruction."},
+  {q:"What should you do when joining a motorway?", a:["Stop at the end of the slip road","Match speed with traffic and merge when safe","Signal only after merging","Use the hard shoulder first"], c:1, e:"Use the slip road to match speed and merge safely into a suitable gap."},
+  {q:"You see amber flashing lights on a school bus ahead. You should:", a:["Overtake quickly","Be prepared to stop — children may be boarding/alighting","Ignore — buses always stop safely","Sound horn"], c:1, e:"Amber lights indicate children may be crossing to/from the bus — slow and prepare to stop."},
+  {q:"On a motorway, what colour are the studs between lanes?", a:["Red","White","Green","Amber"], c:1, e:"White studs separate lanes; red left edge; amber between central reservation and right lane; green at slip roads."},
+  {q:"You’re following a long vehicle that signals left but moves right first. You should:", a:["Overtake quickly on the left","Keep back and allow it to turn","Sound horn and close up","Pass on the right immediately"], c:1, e:"Large vehicles may swing out to turn. Keep back and give them room."},
+  {q:"When should you not overtake?", a:["On long straight roads","Just after a bend","Approaching a junction or dip in the road","On motorways"], c:2, e:"Avoid overtaking where visibility/space is limited, such as near junctions, bends, brows, dips."},
+  {q:"You’re approaching a mini-roundabout. You should:", a:["Approach at speed and assert priority","Slow, look, give way to traffic from the right","Only stop if traffic policeman present","Use main beam to be seen"], c:1, e:"Give way to traffic from the right and proceed carefully around the central marking."}
 ];
-while(questions.length<TOTAL)questions.push(...questions.slice(0,TOTAL-questions.length));
-function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
-const order=shuffle([...Array(TOTAL).keys()]);
-let i=0,answers=Array(TOTAL).fill(null),score=0,time=DUR,finished=false;
-const qn=document.getElementById('qnum'),qt=document.getElementById('qtext'),
-qa=document.getElementById('answers'),bar=document.getElementById('bar'),
-timer=document.getElementById('timer'),quiz=document.getElementById('quiz'),res=document.getElementById('result');
-function fmt(s){const m=Math.floor(s/60),x=s%60;return`${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`;}
-function show(k){
- const q=questions[order[k]];qn.textContent=`Question ${k+1} of ${TOTAL}`;qt.textContent=q.q;qa.innerHTML='';
- const opts=shuffle(q.a.map((t,j)=>({t,j})));
- opts.forEach(o=>{const b=document.createElement('button');b.textContent=o.t;b.onclick=()=>{answers[k]=o.j;bar.style.width=(answers.filter(x=>x!==null).length/TOTAL*100)+'%';};qa.append(b);});
+// Ensure exactly 50
+while(QUESTIONS.length < 50) QUESTIONS.push(...QUESTIONS.slice(0, 50-QUESTIONS.length));
+
+// ===== Utils =====
+const shuffle = (a) => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const fmtTime = (s) => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+// ===== State =====
+let order = shuffle([...Array(QUESTIONS.length).keys()]).slice(0, TOTAL);
+let idx = 0;
+let chosen = Array(TOTAL).fill(null); // stores original option index
+let timeLeft = DURATION_SECONDS;
+let finished = false;
+
+// ===== Elements =====
+const qNo = document.getElementById('qNo');
+const qText = document.getElementById('qText');
+const qImg = document.getElementById('qImg');
+const answersEl = document.getElementById('answers');
+const progressBar = document.getElementById('progressBar');
+const review = document.getElementById('review');
+const timerEl = document.getElementById('timer');
+const app = document.getElementById('app');
+const results = document.getElementById('results');
+const summary = document.getElementById('summary');
+const incorrectList = document.getElementById('incorrectList');
+const fbShareBtn = document.getElementById('fbShare');
+const copyShareBtn = document.getElementById('copyShare');
+const saveImgBtn = document.getElementById('saveImg');
+const shareCard = document.getElementById('shareCard');
+
+// ===== Render =====
+function updateProgress(){
+  const answered = chosen.filter(v=>v!==null).length;
+  progressBar.style.width = (answered/TOTAL*100)+'%';
 }
-function calc(){score=answers.reduce((s,v,n)=>s+(v===questions[order[n]].c?1:0),0);return score;}
+function updateReview(){
+  review.innerHTML = '';
+  for(let i=0;i<TOTAL;i++){
+    const b = document.createElement('button');
+    b.textContent = i+1;
+    if(chosen[i]!==null) b.classList.add('answered');
+    b.onclick = ()=>loadQuestion(i);
+    review.appendChild(b);
+  }
+}
+function loadQuestion(i){
+  idx = i;
+  const qi = order[i];
+  const q = QUESTIONS[qi];
+  qNo.textContent = i+1;
+  qText.textContent = q.q;
+  // image
+  if(q.img){
+    qImg.src = q.img;
+    qImg.classList.remove('hidden');
+  }else{
+    qImg.classList.add('hidden');
+  }
+  // answers (shuffle display, store original indices)
+  answersEl.innerHTML = '';
+  const options = shuffle(q.a.map((text,orig)=>({text,orig})));
+  options.forEach((opt,k)=>{
+    const label = document.createElement('label');
+    label.className = 'answer';
+    const inp = document.createElement('input');
+    inp.type = 'radio'; inp.name = 'q';
+    inp.checked = (chosen[i]===opt.orig);
+    inp.onchange = ()=>{ chosen[i]=opt.orig; updateProgress(); updateReview(); };
+    const txt = document.createElement('div');
+    const letter = String.fromCharCode(65+k);
+    txt.innerHTML = `<strong>${letter}.</strong> ${opt.text}`;
+    label.appendChild(inp); label.appendChild(txt);
+    answersEl.appendChild(label);
+  });
+  document.getElementById('prevBtn').disabled = i===0;
+  document.getElementById('nextBtn').disabled = i===TOTAL-1;
+}
+function score(){
+  let s=0;
+  for(let i=0;i<TOTAL;i++){
+    const qi = order[i]; const q = QUESTIONS[qi];
+    if(chosen[i]===q.c) s++;
+  }
+  return s;
+}
 function finish(){
- if(finished)return;finished=true;
- const s=calc(),pass=s>=PASS;
- quiz.classList.add('hidden');res.classList.remove('hidden');
- res.innerHTML=`<h2>Result</h2>
- <p>You scored <strong>${s}</strong> of ${TOTAL}</p>
- <p>${pass?'✅ PASS':'❌ FAIL'}</p>
- <p>Time taken: ${fmt(DUR-time)}</p>
- <p><a href='https://www.facebook.com/yespassed' style='color:#19b36b;'>Share your result</a></p>`;
+  if(finished) return;
+  finished = true;
+  const s = score();
+  const passed = s>=PASS;
+  const taken = DURATION_SECONDS - timeLeft;
+
+  app.classList.add('hidden');
+  results.classList.remove('hidden');
+
+  summary.innerHTML = `Score: <strong>${s}</strong> / ${TOTAL} — ${passed?'<span style="color:var(--brand)">PASS</span>':'<span style="color:var(--danger)">FAIL</span>'}
+  <br>Answered: ${chosen.filter(v=>v!==null).length} · Time taken: ${fmtTime(taken)} · Date: ${new Date().toLocaleDateString()}`;
+
+  // Share card fill
+  document.getElementById('shareDate').textContent = `Date: ${new Date().toLocaleDateString()}`;
+  document.getElementById('shareTimeTaken').textContent = `Time taken: ${fmtTime(taken)}`;
+  document.getElementById('shareScore').textContent = `Score: ${s}/${TOTAL}`;
+  document.getElementById('shareOutcome').textContent = passed ? 'Outcome: PASS' : 'Outcome: FAIL';
+
+  // Incorrect list
+  incorrectList.innerHTML = '';
+  for(let i=0;i<TOTAL;i++){
+    const qi = order[i]; const q = QUESTIONS[qi];
+    if(chosen[i]!==q.c){
+      const li = document.createElement('li');
+      const your = chosen[i]==null ? 'No answer' : q.a[chosen[i]];
+      li.innerHTML = `<div class="inc-q">Q${i+1}. ${q.q}</div>
+        ${q.img?`<img src="${q.img}" alt="Road sign" class="qimg" style="max-width:120px">`:''}
+        <div>Your answer: <em>${your}</em></div>
+        <div class="inc-correct">Correct: <strong>${q.a[q.c]}</strong></div>
+        <div class="inc-expl">Why: ${q.e||'—'}</div>`;
+      incorrectList.appendChild(li);
+    }
+  }
+
+  // Share buttons
+  fbShareBtn.onclick = ()=>{
+    const quote = `I just scored ${s}/${TOTAL} on the Yes Passed Mock Theory Test! 🚗💚\nYes Passed Driving Academy\nBuilt for Growth. Driven by Learning.`;
+    const u = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}&quote=${encodeURIComponent(quote)}`;
+    window.open(u,'_blank','noopener,noreferrer,width=800,height=600');
+  };
+  copyShareBtn.onclick = async ()=>{
+    const text = `🚗 I scored ${s}/${TOTAL} on the Yes Passed Mock Theory Test!\nTry it: ${SHARE_URL}\n\n💚 Yes Passed Driving Academy\nBuilt for Growth. Driven by Learning.`;
+    try{ await navigator.clipboard.writeText(text); alert('Result copied!'); }catch{ alert('Copy failed. Long-press and copy:\n\n'+text); }
+  };
+  saveImgBtn.onclick = async ()=>{
+    if(typeof html2canvas==='undefined'){ alert('Snapshot tool not loaded.'); return; }
+    const canvas = await html2canvas(shareCard, {backgroundColor:null, scale:2});
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `yes-passed-result-${s}.png`;
+    a.click();
+  };
 }
-document.getElementById('next').onclick=()=>{if(i<TOTAL-1)i++;show(i);};
-document.getElementById('prev').onclick=()=>{if(i>0)i--;show(i);};
-document.getElementById('finish').onclick=finish;
-setInterval(()=>{if(finished)return;time--;timer.textContent=fmt(time);if(time<=0)finish();},1000);
-show(0);
+
+// ===== Timer =====
+setInterval(()=>{
+  if(finished) return;
+  timeLeft--;
+  if(timeLeft<=0){ timeLeft=0; finish(); return; }
+  timerEl.textContent = fmtTime(timeLeft);
+  if(timeLeft===5*60) timerEl.style.color = 'var(--accent)';
+  if(timeLeft<=60) timerEl.style.color = 'var(--danger)';
+},1000);
+
+// ===== Init & Handlers =====
+document.getElementById('prevBtn').onclick = ()=>{ if(idx>0) loadQuestion(idx-1); };
+document.getElementById('nextBtn').onclick = ()=>{ if(idx<TOTAL-1) loadQuestion(idx+1); };
+document.getElementById('submitBtn').onclick = ()=>{ if(confirm('Submit test now?')) finish(); };
+document.getElementById('restart').onclick = ()=>location.reload();
+
+function init(){
+  updateProgress(); updateReview(); loadQuestion(0);
+}
+init();
 </script>
 </body>
 </html>
