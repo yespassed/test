@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yes Passed – Cat B Mock Theory Test</title>
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b0f14;color:#e8f1f0;padding:20px}
+h1{color:#19b36b;text-align:center}
+.card{background:#111823;border-radius:12px;max-width:800px;margin:20px auto;padding:20px}
+button{background:#19b36b;color:#04140d;border:none;padding:10px 14px;margin:5px;border-radius:8px;font-weight:bold;cursor:pointer}
+button:hover{background:#128b53}
+.progress{height:8px;background:#122031;border-radius:8px;margin:10px 0;overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(90deg,#19b36b,#5bebaa);width:0%}
+.answers{display:flex;flex-direction:column;gap:8px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<h1>Yes Passed – Cat B Mock Theory Test</h1>
+<div id="quiz" class="card">
+  <div id="qnum"></div>
+  <div class="progress"><div id="bar"></div></div>
+  <div id="qtext"></div>
+  <div id="answers" class="answers"></div>
+  <div><button id="prev">← Prev</button><button id="next">Next →</button><button id="finish">Submit</button></div>
+</div>
+<div id="result" class="card hidden"></div>
+
+<script>
+const questions=[
+ {q:"What does a red circular road sign mean?",a:["Information","Warning","You must do / must not"],c:2},
+ {q:"Triangle with a deer symbol means…",a:["Farm traffic","Wild animals likely to cross","Zoo ahead"],c:1},
+ {q:"Blue circle with 30 means…",a:["Minimum 30 mph","Maximum 30 mph","Advisory 30 mph"],c:0},
+ {q:"What does a rectangular brown sign show?",a:["Tourist info/attraction","Bus lane","Diversion"],c:0}
+];
+let i=0,score=0,answers=Array(questions.length).fill(null);
+const qn=document.getElementById('qnum'),qt=document.getElementById('qtext'),qa=document.getElementById('answers'),bar=document.getElementById('bar');
+function show(k){
+ const q=questions[k];qn.textContent=Question ${k+1} of ${questions.length};qt.textContent=q.q;qa.innerHTML='';
+ q.a.forEach((txt,j)=>{const b=document.createElement('button');b.textContent=txt;b.onclick=()=>{answers[k]=j;bar.style.width=(answers.filter(x=>x!==null).length/questions.length*100)+'%';};qa.appendChild(b);});
+}
+function finish(){
+ score=answers.reduce((s,v,n)=>s+(v===questions[n].c?1:0),0);
+ document.getElementById('quiz').classList.add('hidden');
+ const r=document.getElementById('result');
+ r.classList.remove('hidden');
+ r.innerHTML=`<h2>Result</h2><p>You scored <strong>${score}</strong> / ${questions.length}</p><p>${score>=3?'✅ PASS':'❌ Try again'}</p>
+ <p><a href='https://www.facebook.com/yespassed' style='color:#19b36b;'>Share your result</a></p>`;
+}
+document.getElementById('next').onclick=()=>{if(i<questions.length-1)i++;show(i);};
+document.getElementById('prev').onclick=()=>{if(i>0)i--;show(i);};
+document.getElementById('finish').onclick=finish;
+show(0);
+</script>
+</body>
+</html>
