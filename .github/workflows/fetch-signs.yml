@@ -1,0 +1,90 @@
+name: Fetch UK Sign SVGs
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/fetch-signs.yml"
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure img folder
+        run: mkdir -p img
+
+      - name: Download SVGs
+        run: |
+          set -e
+          cd img
+          fetch() { curl -fsSL "$2" -o "$1"; }
+          # Using Wikimedia "Special:FilePath" which serves the SVG directly.
+          fetch uk_616.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20616.svg"
+          fetch uk_602.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20602.svg"
+          fetch uk_593.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20593.svg"
+          fetch uk_606.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20606.svg"
+          fetch uk_588.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20588.svg"
+          fetch uk_589.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20589.svg"
+          fetch uk_590.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20590.svg"
+          fetch uk_610.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20610.svg"
+          fetch uk_611.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20611.svg"
+          fetch uk_640_1.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20640.1.svg"
+          fetch uk_642.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20642.svg"
+          fetch uk_629_2.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20629.2.svg"
+          fetch uk_958.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20958.svg"
+          fetch uk_520.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20520.svg"
+          fetch uk_512.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20512.svg"
+          fetch uk_547.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20547.svg"
+          fetch uk_547_4.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20547.4.svg"
+          fetch uk_515.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20515.svg"
+          fetch uk_554_2.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20554.2.svg"
+          fetch uk_552.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20552.svg"
+          fetch uk_567.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20567.svg"
+          fetch uk_810.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20810.svg"
+          fetch uk_642_2.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20642.2.svg"
+          fetch uk_596.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20596.svg"
+          fetch uk_597.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20597.svg"
+          fetch uk_561.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20561.svg"
+          fetch uk_562.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20562.svg"
+          fetch uk_563.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20563.svg"
+          fetch uk_564.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20564.svg"
+          fetch uk_565.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20565.svg"
+          fetch uk_566.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20566.svg"
+          fetch uk_574.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20574.svg"
+          fetch uk_575.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20575.svg"
+          fetch uk_576.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20576.svg"
+          fetch uk_577.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20577.svg"
+          fetch uk_579.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20579.svg"
+          fetch uk_580.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20580.svg"
+          fetch uk_581.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20581.svg"
+          fetch uk_582.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20582.svg"
+          fetch uk_583.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20583.svg"
+          fetch uk_584.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20584.svg"
+          fetch uk_585.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20585.svg"
+          fetch uk_586.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20586.svg"
+          fetch uk_587.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20587.svg"
+          fetch uk_591.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20591.svg"
+          fetch uk_592.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20592.svg"
+          fetch uk_594.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20594.svg"
+          fetch uk_595.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20595.svg"
+          fetch uk_816.svg "https://commons.wikimedia.org/wiki/Special:FilePath/UK%20traffic%20sign%20816.svg"
+
+      - name: Add attribution README
+        run: |
+          cat > img/README.txt <<'TXT'
+          UK road sign images (SVG) downloaded from Wikimedia Commons.
+          Licence: Open Government Licence (OGL). Traffic signs are Crown copyright.
+          You may reproduce traffic signs free of charge, accurately and not in a misleading context.
+          Source overview: https://www.gov.uk/guidance/traffic-sign-images
+          TXT
+
+      - name: Commit files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git add img
+          git commit -m "Fetch official UK road sign SVGs" || echo "Nothing to commit"
+          git push
